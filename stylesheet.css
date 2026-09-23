@@ -1,0 +1,123 @@
+/* Container inside calendar tray */
+.antigravity-quota-box {
+  margin: 0;
+  padding: 0;
+  spacing: 4px;
+}
+
+/* Header section (styled like World Clocks & Today headers) */
+.antigravity-header-box {
+  margin: 8px 10px 2px 10px;
+  spacing: 6px;
+}
+
+.antigravity-title-label {
+  font-size: 10pt;
+  font-weight: 700;
+  color: #424242; /* Matches "World Clocks" header */
+}
+
+.antigravity-sync-label {
+  font-size: 8pt;
+  color: #888888;
+}
+
+/* Card per Account (Identical to .world-clocks-button and .events-button in WhiteSur) */
+.antigravity-card {
+  color: #424242;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  padding: 10px 12px;
+  margin: 4px 7px;
+  spacing: 6px;
+}
+
+.antigravity-card:hover {
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.antigravity-card-header {
+  spacing: 6px;
+  margin-bottom: 2px;
+}
+
+.antigravity-account-label {
+  font-size: 9.5pt;
+  font-weight: 700;
+  color: #2e3436; /* Dark charcoal for crisp legibility */
+}
+
+.antigravity-account-badge {
+  font-size: 8pt;
+  color: #757575;
+  font-weight: 500;
+}
+
+/* Metric Row */
+.antigravity-metric-row {
+  spacing: 3px;
+  margin-bottom: 3px;
+}
+
+.antigravity-metric-text-box {
+  /* top label and percentage */
+}
+
+.antigravity-metric-label {
+  font-size: 8.5pt;
+  color: #555555; /* Neutral dark gray, highly readable on light card */
+  font-weight: 500;
+}
+
+.antigravity-metric-pct {
+  font-size: 8.5pt;
+  font-weight: 700;
+}
+
+/* Colors with high contrast on light card background */
+.antigravity-color-safe {
+  color: #2e7d32; /* Dark green */
+}
+
+.antigravity-color-warning {
+  color: #c67a00; /* Warm dark amber */
+}
+
+.antigravity-color-exhausted {
+  color: #c1121f; /* Deep crimson red */
+}
+
+/* Progress Bar */
+.antigravity-progress-track {
+  height: 5px;
+  background-color: #e5e7eb; /* Soft neutral light gray track */
+  border-radius: 3px;
+}
+
+.antigravity-progress-fill-safe {
+  height: 5px;
+  border-radius: 3px;
+  background-color: #48b24b; /* Vibrant Apple/WhiteSur green */
+}
+
+.antigravity-progress-fill-warning {
+  height: 5px;
+  border-radius: 3px;
+  background-color: #ff9800; /* Warm amber */
+}
+
+.antigravity-progress-fill-exhausted {
+  height: 5px;
+  border-radius: 3px;
+  background-color: #c1121f; /* Crimson */
+}
+
+.antigravity-empty-label {
+  font-size: 9pt;
+  color: #757575;
+  font-style: italic;
+  padding: 10px;
+}
