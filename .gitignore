@@ -1,0 +1,12 @@
+# Internal development notes & specs
+docs/
+.superpowers/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# GNOME extension packages
+*.zip
+*.tar.gz
