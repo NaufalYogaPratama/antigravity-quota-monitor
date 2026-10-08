@@ -4,22 +4,21 @@
 [![Platform](https://img.shields.io/badge/Platform-Ubuntu%2024.04%20LTS-orange.svg)](https://ubuntu.com)
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL%203.0-green.svg)](LICENSE)
 
-A lightweight, glanceable **GNOME Shell 46** extension that monitors your **Google Antigravity AI quota** across multiple active accounts directly inside the native calendar and notification tray menu.
+A lightweight, glanceable **GNOME Shell 46** extension that monitors your **Google Antigravity & OpenAI Codex** AI quotas across multiple active accounts directly inside the native calendar and notification tray menu.
 
 ---
 
 ## ✨ Features
 
-- **Multi-Account Support:** Automatically detects and displays quota cards for each active Google account configured in your environment.
-- **Glanceable Limit Tiers:**
-  - ⚡ **Gemini (5h):** Rolling 5-hour quota percentage & countdown until reset.
-  - 📅 **Gemini (7d):** Weekly quota percentage & countdown until reset.
-  - 🤖 **Claude & GPT:** Weekly shared tier quota status (`ok` vs `exhausted`) & reset timer.
-- **Native Look & Feel:** Seamlessly embeds below *World Clocks* in the top panel calendar tray, styled with clean cards and progress bars matching Adwaita / modern GNOME themes.
+- **Segmented Tab Switcher:** Effortlessly switch between **Antigravity** and **Codex** with a clean, responsive segmented pill control.
+- **Multi-Account & Multi-Provider Support:**
+  - **Google Antigravity:** Displays Gemini (5h), Gemini (7d), and Claude & GPT shared limits for both Personal and Work accounts.
+  - **OpenAI Codex:** Displays 7-day rolling limit and reset countdown.
+- **Native Look & Feel:** Seamlessly embeds below *World Clocks* in the top panel calendar tray, styled with clean cards and progress bars matching Adwaita / modern GNOME themes (e.g. WhiteSur).
 - **High-Contrast Adaptive Palette:**
-  - 🟢 **Safe (> 20%):** Vibrant green indicator.
-  - 🟡 **Warning (≤ 20%):** Warm amber indicator.
-  - 🔴 **Exhausted (0%):** Crimson red indicator.
+  - 🟢 **Safe (> 20%):** Vibrant green indicator (`#2e7d32` / `#48b24b`).
+  - 🟡 **Warning (≤ 20%):** Warm amber indicator (`#c67a00` / `#ff9800`).
+  - 🔴 **Exhausted (0%):** Crimson red indicator (`#c1121f`).
 - **Non-Blocking & Battery Friendly:**
   - Instant event-driven fetch every time the calendar menu opens.
   - Periodic 60-second countdown updates only while the tray is actively open.
@@ -65,7 +64,7 @@ cd antigravity-quota-monitor
 ```
 GNOME Shell Top Bar (dateMenu)
    │
-   ├── [Open Event / 60s Interval]
+   ├── [Open Event / Tab Switch / 60s Interval]
    │
    ▼
 extension.js (ESM Class)
@@ -81,9 +80,9 @@ data_fetcher.py
 ~/.omp/agent/agent.db (usage_history & auth_credentials)
 ```
 
-1. **`extension.js`**: Standard GNOME 46 ESM extension module that constructs the `St` UI components and connects to `dateMenu.menu` events.
+1. **`extension.js`**: Standard GNOME 46 ESM extension module that constructs the `St` UI components, segmented pill switcher, and connects to `dateMenu.menu` events.
 2. **`data_fetcher.py`**: A minimal, self-contained Python script executing a read-only query on SQLite WAL tables and returning formatted JSON in `< 20ms`.
-3. **`stylesheet.css`**: Provides styling for container cards, progress tracks, and color indicators.
+3. **`stylesheet.css`**: Provides styling for container cards, segmented tabs, progress tracks, and color indicators.
 
 ---
 

@@ -10,6 +10,8 @@ export default class AntigravityQuotaExtension extends Extension {
         this._container = null;
         this._openStateSignalId = null;
         this._refreshTimeoutId = null;
+        this._activeTab = 'antigravity';
+        this._cachedData = null;
 
         const dateMenu = Main.panel.statusArea.dateMenu;
         if (!dateMenu) {
@@ -111,6 +113,7 @@ export default class AntigravityQuotaExtension extends Extension {
                     const [, stdout, stderr] = proc.communicate_utf8_finish(res);
                     if (proc.get_successful()) {
                         const data = JSON.parse(stdout);
+                        this._cachedData = data;
                         this._renderData(data);
                     } else {
                         console.error('[AntigravityQuota] Fetcher stderr:', stderr);
@@ -127,12 +130,20 @@ export default class AntigravityQuotaExtension extends Extension {
         }
     }
 
+    _switchTab(tabName) {
+        if (this._activeTab === tabName) return;
+        this._activeTab = tabName;
+        if (this._cachedData) {
+            this._renderData(this._cachedData);
+        }
+    }
+
     _renderError(message) {
         if (!this._container) return;
         this._container.destroy_all_children();
 
         const label = new St.Label({
-            text: `Antigravity: ${message}`,
+            text: `AI Quota: ${message}`,
             style_class: 'antigravity-empty-label',
         });
         this._container.add_child(label);
@@ -142,36 +153,86 @@ export default class AntigravityQuotaExtension extends Extension {
         if (!this._container) return;
         this._container.destroy_all_children();
 
-        if (data.status !== 'ok' || !data.accounts || data.accounts.length === 0) {
+        if (data.status !== 'ok') {
             const emptyLabel = new St.Label({
-                text: data.message || 'Waiting for Antigravity OMP sync...',
+                text: data.message || 'Waiting for AI usage sync...',
                 style_class: 'antigravity-empty-label',
             });
             this._container.add_child(emptyLabel);
             return;
         }
 
-        // Section Title Header
+        // Header with Segmented Tab Switcher
         const headerBox = new St.BoxLayout({
             style_class: 'antigravity-header-box',
             x_expand: true,
         });
-        const titleLabel = new St.Label({
-            text: 'Google Antigravity',
-            style_class: 'antigravity-title-label',
-            x_expand: true,
+
+        // Tab Pill Box
+        const tabBox = new St.BoxLayout({
+            style_class: 'antigravity-tab-box',
+            y_align: Clutter.ActorAlign.CENTER,
         });
+
+        // Tab: Antigravity
+        const isAgActive = this._activeTab === 'antigravity';
+        const agTabBtn = new St.Button({
+            label: 'Antigravity',
+            style_class: `antigravity-tab-btn ${isAgActive ? 'antigravity-tab-btn-active' : ''}`,
+            reactive: true,
+            can_focus: true,
+        });
+        agTabBtn.connect('clicked', () => this._switchTab('antigravity'));
+        tabBox.add_child(agTabBtn);
+
+        // Tab: Codex
+        const isCodexActive = this._activeTab === 'codex';
+        const codexTabBtn = new St.Button({
+            label: 'Codex',
+            style_class: `antigravity-tab-btn ${isCodexActive ? 'antigravity-tab-btn-active' : ''}`,
+            reactive: true,
+            can_focus: true,
+        });
+        codexTabBtn.connect('clicked', () => this._switchTab('codex'));
+        tabBox.add_child(codexTabBtn);
+
+        headerBox.add_child(tabBox);
+
+        // Spacer + Sync Label
+        const spacer = new St.Widget({ x_expand: true });
+        headerBox.add_child(spacer);
+
         const syncLabel = new St.Label({
             text: 'OMP',
             style_class: 'antigravity-sync-label',
             y_align: Clutter.ActorAlign.CENTER,
         });
-        headerBox.add_child(titleLabel);
         headerBox.add_child(syncLabel);
+
         this._container.add_child(headerBox);
 
-        // Account Cards
-        for (const acc of data.accounts) {
+        // Get accounts for current active tab
+        let accounts = [];
+        if (this._activeTab === 'codex') {
+            accounts = data.providers?.codex?.accounts ?? [];
+        } else {
+            accounts = data.providers?.antigravity?.accounts ?? data.accounts ?? [];
+        }
+
+        if (accounts.length === 0) {
+            const emptyMsg = this._activeTab === 'codex'
+                ? 'No active OpenAI Codex accounts'
+                : 'No active Google Antigravity accounts';
+            const emptyLabel = new St.Label({
+                text: emptyMsg,
+                style_class: 'antigravity-empty-label',
+            });
+            this._container.add_child(emptyLabel);
+            return;
+        }
+
+        // Render Account Cards
+        for (const acc of accounts) {
             const card = new St.BoxLayout({
                 vertical: true,
                 style_class: 'antigravity-card',
@@ -196,7 +257,7 @@ export default class AntigravityQuotaExtension extends Extension {
             cardHeader.add_child(badgeLabel);
             card.add_child(cardHeader);
 
-            // Metrics (Gemini 5h, Gemini 7d, Claude & GPT)
+            // Metrics
             for (const m of acc.metrics) {
                 const metricBox = new St.BoxLayout({
                     vertical: true,
@@ -250,7 +311,7 @@ export default class AntigravityQuotaExtension extends Extension {
                         x_expand: false,
                     });
 
-                    // Initial conservative width to avoid any layout jump
+                    // Initial conservative width
                     fill.set_width(Math.max(3, Math.round((fillWidthPct / 100.0) * 160)));
 
                     // Dynamically fit track's exact allocated width when rendered
@@ -293,5 +354,6 @@ export default class AntigravityQuotaExtension extends Extension {
         }
 
         this._dateMenu = null;
+        this._cachedData = null;
     }
 }

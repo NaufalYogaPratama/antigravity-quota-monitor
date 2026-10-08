@@ -1,10 +1,10 @@
 {
   "name": "Antigravity Quota Monitor",
-  "description": "Monitors Antigravity AI quota and reset countdowns in the calendar menu tray.",
+  "description": "Monitors Google Antigravity and OpenAI Codex quotas in the calendar menu tray.",
   "uuid": "antigravity-quota-monitor@naufal.dev",
   "shell-version": [
     "46"
   ],
-  "url": "https://github.com/naufal/antigravity-quota-monitor",
-  "version": 1
+  "url": "https://github.com/NaufalYogaPratama/antigravity-quota-monitor",
+  "version": 2
 }
